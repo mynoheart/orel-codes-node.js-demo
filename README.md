@@ -1,4 +1,4 @@
-# orel-codes-golang-demo
+# orel-codes-node.js-demo
 
 Run
 --
