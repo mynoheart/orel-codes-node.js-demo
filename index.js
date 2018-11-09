@@ -65,8 +65,12 @@ function startWorker(cb) {
         }
     
         let bodyRaw = '';
-        request.on('data', function(chunk) {
-            bodyRaw += chunk.toString();
+        request.on('readable', function() {
+            var chunk;
+
+            while (null !== (chunk = request.read())) {
+                bodyRaw += chunk.toString();
+            }
         });
     
         request.on('end', function() {
@@ -90,8 +94,9 @@ function startWorker(cb) {
             let responseBodyRaw = JSON.stringify(responseBody);
     
             response.setHeader('Content-Type', 'application/json');
-            response.write(responseBodyRaw);
-            response.end();
+            response.setHeader('Content-Length', responseBodyRaw.length);
+
+            response.end(responseBodyRaw);
             return;
     
         });
